@@ -6,6 +6,31 @@
 	<groupId>de.philippkatz.swing.property</groupId>
 	<artifactId>property-editor</artifactId>
 	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<name>Hierarchical Property List Editor</name>
+	<description>An editor for hierarchical properties as Java Swing component</description>
+	<url>https://github.com/qqilihq/property-editor</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>	
+
+	<developers>
+		<developer>
+			<name>Philipp Katz</name>
+			<email>philipp@philippkatz.de</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/qqilihq/property-editor.git</connection>
+		<developerConnection>scm:git:ssh://github.com:qqilihq/property-editor.git</developerConnection>
+		<url>http://github.com/qqilihq/property-editor/tree/master</url>
+	</scm>
 
 	<build>
 		<plugins>
