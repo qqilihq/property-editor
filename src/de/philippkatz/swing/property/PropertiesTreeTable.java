@@ -93,23 +93,4 @@ public final class PropertiesTreeTable extends JXTreeTable {
 		return editingClass != null ? editingClass : super.getColumnClass(column);
 	}
 
-	@Override
-	public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
-		final TableCellRenderer defaultRenderer = super.getDefaultRenderer(columnClass);
-
-		return new TableCellRenderer() {
-
-			@Override
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocus, int row, int column) {
-
-				// http://stackoverflow.com/a/43438139
-				if (!isSelected) {
-					hasFocus = false;
-				}
-				return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			}
-		};
-	}
-
 }

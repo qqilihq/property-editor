@@ -12,9 +12,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
 import de.philippkatz.swing.property.types.PropertyNode;
@@ -46,12 +48,24 @@ public class PropertiesEditor extends JPanel {
 			}
 		});
 
+		// clear the selection, when clicking on an empty area of the table;
+		// see here: http://stackoverflow.com/a/43443397
 		treeTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				TreePath path = treeTable.getPathForLocation(e.getX(), e.getY());
 				if (path == null) {
+
 					treeTable.clearSelection();
+
+					ListSelectionModel selectionModel = treeTable.getSelectionModel();
+					selectionModel.setAnchorSelectionIndex(-1);
+					selectionModel.setLeadSelectionIndex(-1);
+
+					TableColumnModel columnModel = treeTable.getColumnModel();
+					columnModel.getSelectionModel().setAnchorSelectionIndex(-1);
+					columnModel.getSelectionModel().setLeadSelectionIndex(-1);
+
 				}
 			}
 		});
