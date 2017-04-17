@@ -11,6 +11,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import org.jdesktop.swingx.JXTreeTable;
@@ -25,6 +26,32 @@ import de.philippkatz.swing.property.types.PropertyTypes;
 
 @SuppressWarnings("serial")
 public final class PropertiesTreeTable extends JXTreeTable {
+
+	/**
+	 * Makes keys which are not editable (for entries within arrays) appear in a
+	 * grey color.
+	 */
+	private final class KeyRenderer extends DefaultTreeCellRenderer {
+		public KeyRenderer() {
+			setOpenIcon(null);
+			setClosedIcon(null);
+			setLeafIcon(null);
+		}
+
+		@Override
+		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+				boolean leaf, int row, boolean hasFocus) {
+			Component component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			TreePath path = getPathForRow(row);
+			if (path != null) {
+				PropertyNode item = (PropertyNode) path.getLastPathComponent();
+				if (((PropertyNode) item.getParent()).getType() == PropertyTypes.ARRAY) {
+					component.setForeground(Color.GRAY);
+				}
+			}
+			return component;
+		}
+	}
 
 	/**
 	 * Verifies upon {@link #stopCellEditing()} whether the entered key is
@@ -99,14 +126,9 @@ public final class PropertiesTreeTable extends JXTreeTable {
 		setHighlighters(HighlighterFactory.createAlternateStriping());
 		setRowHeight(20);
 		setTreeTableModel(model);
-
-		setOpenIcon(null);
-		setClosedIcon(null);
-		setLeafIcon(null);
-
 		setDefaultEditor(PropertyType.class, new ComboBoxCellEditor(new JComboBox<>(PropertyTypes.ALL)));
 		setDefaultRenderer(ChildCount.class, new ChildCountRenderer());
-
+		setTreeCellRenderer(new KeyRenderer());
 	}
 
 	@Override
