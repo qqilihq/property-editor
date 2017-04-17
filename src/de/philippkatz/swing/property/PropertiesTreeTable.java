@@ -25,8 +25,8 @@ import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.jdesktop.swingx.renderer.FormatStringValue;
 import org.jdesktop.swingx.treetable.TreeTableCellEditor;
 
-import de.philippkatz.swing.property.types.ChildCount;
 import de.philippkatz.swing.property.types.PropertyNode;
+import de.philippkatz.swing.property.types.PropertyNode.ChildCount;
 import de.philippkatz.swing.property.types.PropertyType;
 import de.philippkatz.swing.property.types.PropertyTypes;
 

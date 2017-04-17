@@ -4,6 +4,15 @@ import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.MutableTreeTableNode;
 
 public class PropertyNode extends AbstractMutableTreeTableNode {
+	
+	public static final class ChildCount {
+		public final int count;
+
+		private ChildCount(int count) {
+			this.count = count;
+		}
+	}
+
 
 	private String key;
 
