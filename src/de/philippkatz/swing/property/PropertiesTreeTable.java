@@ -3,10 +3,13 @@ package de.philippkatz.swing.property;
 import java.awt.Color;
 import java.awt.Component;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -17,6 +20,9 @@ import javax.swing.tree.TreePath;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
+import org.jdesktop.swingx.renderer.CheckBoxProvider;
+import org.jdesktop.swingx.renderer.DefaultTableRenderer;
+import org.jdesktop.swingx.renderer.FormatStringValue;
 import org.jdesktop.swingx.treetable.TreeTableCellEditor;
 
 import de.philippkatz.swing.property.types.ChildCount;
@@ -129,6 +135,23 @@ public final class PropertiesTreeTable extends JXTreeTable {
 		setDefaultEditor(PropertyType.class, new ComboBoxCellEditor(new JComboBox<>(PropertyTypes.ALL)));
 		setDefaultRenderer(ChildCount.class, new ChildCountRenderer());
 		setTreeCellRenderer(new KeyRenderer());
+
+		// make rendering and editing of checkboxes and numbers align left
+		setDefaultRenderer(Boolean.class, new DefaultTableRenderer(new CheckBoxProvider(null, SwingConstants.LEFT)));
+		setDefaultRenderer(Number.class, new DefaultTableRenderer(new FormatStringValue(), SwingConstants.LEFT));
+
+		setDefaultEditor(Boolean.class, new BooleanEditor() {
+			{
+				JCheckBox checkBox = (JCheckBox) getComponent();
+				checkBox.setHorizontalAlignment(SwingConstants.LEFT);
+			}
+		});
+		setDefaultEditor(Number.class, new NumberEditor() {
+			{
+				JTextField textField = (JTextField) getComponent();
+				textField.setHorizontalAlignment(SwingConstants.LEFT);
+			}
+		});
 	}
 
 	@Override
