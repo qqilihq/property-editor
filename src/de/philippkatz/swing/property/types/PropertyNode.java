@@ -27,7 +27,7 @@ public class PropertyNode extends AbstractMutableTreeTableNode {
 		this.type = type;
 	}
 
-	String getKey() {
+	public String getKey() {
 		if (isInArray()) {
 			return "[" + getParent().getIndex(this) + "]";
 		} else {

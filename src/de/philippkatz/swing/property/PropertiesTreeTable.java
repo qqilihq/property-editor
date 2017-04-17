@@ -4,21 +4,66 @@ import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.TreePath;
 
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
+import org.jdesktop.swingx.treetable.TreeTableCellEditor;
 
 import de.philippkatz.swing.property.types.ChildCount;
+import de.philippkatz.swing.property.types.PropertyNode;
 import de.philippkatz.swing.property.types.PropertyType;
 import de.philippkatz.swing.property.types.PropertyTypes;
 
 @SuppressWarnings("serial")
 public final class PropertiesTreeTable extends JXTreeTable {
+
+	/**
+	 * Verifies upon {@link #stopCellEditing()} whether the entered key is
+	 * unique within the parent (ie. there is no sibling this key already). In
+	 * case of conflicts, the editor remains active and the user has to pick a
+	 * different key.
+	 */
+	private final class UniqueKeyTreeTableCellEditor extends TreeTableCellEditor {
+		private final int row;
+
+		private UniqueKeyTreeTableCellEditor(JTree tree, int row) {
+			super(tree);
+			this.row = row;
+		}
+
+		@Override
+		public boolean stopCellEditing() {
+
+			String value = (String) delegate.getCellEditorValue();
+			TreePath path = getPathForRow(row);
+			PropertyNode item = (PropertyNode) path.getLastPathComponent();
+			PropertyNode parent = (PropertyNode) item.getParent();
+			int itemIdx = parent.getIndex(item);
+
+			if (parent.getType() == PropertyTypes.OBJECT) {
+				for (int childIdx = 0; childIdx < parent.getChildCount(); childIdx++) {
+					PropertyNode child = (PropertyNode) parent.getChildAt(childIdx);
+					if (childIdx == itemIdx) {
+						continue;
+					}
+					if (child.getKey().equals(value)) {
+						((JComponent) getComponent()).setBorder(new LineBorder(Color.RED));
+						return false;
+					}
+				}
+			}
+			return super.stopCellEditing();
+		}
+	}
 
 	/**
 	 * Renders the number of children in a collection row.
@@ -80,7 +125,13 @@ public final class PropertiesTreeTable extends JXTreeTable {
 	public TableCellEditor getCellEditor(int row, int column) {
 		editingClass = null;
 		int modelColumn = convertColumnIndexToModel(column);
-		if (modelColumn == 2) {
+		// the hierarchical column which contains they keys; through the custom
+		// cell editor we make sure, that no siblings have identical names
+		if (modelColumn == getHierarchicalColumn()) {
+			// http://stackoverflow.com/a/23832575
+			JTree tree = (JTree) getCellRenderer(0, getHierarchicalColumn());
+			return new UniqueKeyTreeTableCellEditor(tree, row);
+		} else if (modelColumn == 2) {
 			editingClass = getModel().getValueAt(row, modelColumn).getClass();
 			return getDefaultEditor(editingClass);
 		} else {
