@@ -6,10 +6,23 @@ Hierarchical Property List Editor
 An editor for hierarchical properties as Java Swing component. Shamelessly
 inspired by Apple's Property List Editor in Xcode. It allows building data
 structures based on Maps and Lists and primitive types such as Long, Double, and
-Boolean. Its originally created for the [KNIME Selenium Nodes][1] but it could
+Boolean. It is originally created for the [KNIME Selenium Nodes][1] but it could
 probably be of general interest.
 
 The editor is built on top of SwingX.
+
+Download
+--------
+
+Via Maven:
+
+```
+<dependency>
+	<groupId>de.philippkatz.swing.property</groupId>
+	<artifactId>property-editor</artifactId>
+	<version>1.0</version>
+</dependency>
+```
 
 Usage
 -----
@@ -64,7 +77,7 @@ License
 
 [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-- - - 
+- - -
 
 Copyright (c) 2017 Philipp Katz
 
