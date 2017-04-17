@@ -57,10 +57,7 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 
 				// changed from array to object or vice versa; trigger update
 				// listener for all child nodes b/c the keys might have changed
-				TreePath parentPath = new TreePath(getPathToRoot(currentNode));
-				for (int i = 0; i < currentNode.getChildCount(); i++) {
-					modelSupport.fireChildChanged(parentPath, i, currentNode.getChildAt(i));
-				}
+				fireChildrenChanged(currentNode);
 
 			}
 
@@ -71,9 +68,26 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 		}
 
 	}
+
+	private void fireChildrenChanged(TreeTableNode node) {
+		TreePath parentPath = new TreePath(getPathToRoot(node));
+		for (int i = 0; i < node.getChildCount(); i++) {
+			modelSupport.fireChildChanged(parentPath, i, node.getChildAt(i));
+		}
+	}
 	
 	public Object getData() {
 		return ((PropertyNode) getRoot()).toObject();
+	}
+	
+	@Override
+	public void insertNodeInto(MutableTreeTableNode newChild, MutableTreeTableNode parent, int index) {
+		super.insertNodeInto(newChild, parent, index);
+		
+		// make sure all children are updated; an array entry might change its
+		// key from [9] to [10], and we need to re-draw the table in this case
+		fireChildrenChanged(parent);
+		
 	}
 
 }
