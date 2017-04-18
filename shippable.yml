@@ -1,0 +1,10 @@
+# Language setting
+language: java
+
+# Version number
+jdk:
+  - oraclejdk8
+
+build:
+  ci:
+    - mvn clean install
