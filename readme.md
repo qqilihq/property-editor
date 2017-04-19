@@ -1,6 +1,8 @@
 Hierarchical Property List Editor
 =================================
 
+![Run status](https://api.shippable.com/projects/58f65c38d1780a07007b7145/badge?branch=master)
+
 ![Demo](demo.gif)
 
 An editor for hierarchical properties as Java Swing component. Shamelessly
