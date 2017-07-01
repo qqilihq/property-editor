@@ -69,11 +69,18 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 
 	}
 
-	private void fireChildrenChanged(TreeTableNode node) {
+	protected void fireChildrenChanged(TreeTableNode node) {
 		TreePath parentPath = new TreePath(getPathToRoot(node));
+
+		int[] indices = new int[node.getChildCount()];
+		Object[] children = new Object[node.getChildCount()];
+
 		for (int i = 0; i < node.getChildCount(); i++) {
-			modelSupport.fireChildChanged(parentPath, i, node.getChildAt(i));
+			indices[i] = i;
+			children[i] = node.getChildAt(i);
 		}
+
+		modelSupport.fireChildrenChanged(parentPath, indices, children);
 	}
 	
 	public Object getData() {
