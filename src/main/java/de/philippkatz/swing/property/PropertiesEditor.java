@@ -3,8 +3,6 @@ package de.philippkatz.swing.property;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -14,8 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
@@ -41,12 +37,7 @@ public class PropertiesEditor extends JPanel {
 		this.treeTableModel = treeTableModel;
 		treeTable = new PropertiesTreeTable(treeTableModel);
 
-		treeTable.addTreeSelectionListener(new TreeSelectionListener() {
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				updateButtons();
-			}
-		});
+		treeTable.addTreeSelectionListener(e -> updateButtons());
 
 		// clear the selection, when clicking on an empty area of the table;
 		// see here: http://stackoverflow.com/a/43443397
@@ -102,51 +93,45 @@ public class PropertiesEditor extends JPanel {
 		c.gridy = 0;
 
 		addButton = new JButton("Add");
-		addButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		addButton.addActionListener(e -> {
 
-				PropertyNode newProperty = PropertyNode.string();
+			PropertyNode newProperty = PropertyNode.string();
 
-				if (treeTable.getSelectedRow() == -1) {
+			if (treeTable.getSelectedRow() == -1) {
 
-					// at the bottom of the root element
-					treeTableModel.insertNodeInto(newProperty, (PropertyNode) treeTableModel.getRoot(),
-							treeTableModel.getRoot().getChildCount());
+				// at the bottom of the root element
+				treeTableModel.insertNodeInto(newProperty, (PropertyNode) treeTableModel.getRoot(),
+						treeTableModel.getRoot().getChildCount());
+
+			} else {
+
+				TreePath path = treeTable.getPathForRow(treeTable.getSelectedRow());
+				PropertyNode item = (PropertyNode) path.getPathComponent(path.getPathCount() - 1);
+
+				if (item.getAllowsChildren()) {
+					// if the selected item allows children, add child
+					treeTableModel.insertNodeInto(newProperty, item, 0);
 
 				} else {
-
-					TreePath path = treeTable.getPathForRow(treeTable.getSelectedRow());
-					PropertyNode item = (PropertyNode) path.getPathComponent(path.getPathCount() - 1);
-
-					if (item.getAllowsChildren()) {
-						// if the selected item allows children, add child
-						treeTableModel.insertNodeInto(newProperty, item, 0);
-
-					} else {
-						// else, add it as ancestor below the current selection
-						treeTableModel.insertNodeInto(newProperty, (PropertyNode) item.getParent(),
-								item.getParent().getIndex(item) + 1);
-					}
-
+					// else, add it as ancestor below the current selection
+					treeTableModel.insertNodeInto(newProperty, (PropertyNode) item.getParent(),
+							item.getParent().getIndex(item) + 1);
 				}
 
 			}
+
 		});
 		buttonPanel.add(addButton, c);
 
 		c.gridy++;
 		removeButton = new JButton("Remove");
 		buttonPanel.add(removeButton, c);
-		removeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int[] selectedRows = treeTable.getSelectedRows();
-				for (int i = selectedRows.length - 1; i >= 0; i--) {
-					TreePath path = treeTable.getPathForRow(selectedRows[i]);
-					PropertyNode propertyToRemove = (PropertyNode) path.getPathComponent(path.getPathCount() - 1);
-					treeTableModel.removeNodeFromParent(propertyToRemove);
-				}
+		removeButton.addActionListener(e -> {
+			int[] selectedRows = treeTable.getSelectedRows();
+			for (int i = selectedRows.length - 1; i >= 0; i--) {
+				TreePath path = treeTable.getPathForRow(selectedRows[i]);
+				PropertyNode propertyToRemove = (PropertyNode) path.getPathComponent(path.getPathCount() - 1);
+				treeTableModel.removeNodeFromParent(propertyToRemove);
 			}
 		});
 		return buttonPanel;
