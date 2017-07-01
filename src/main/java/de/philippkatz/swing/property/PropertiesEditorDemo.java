@@ -10,14 +10,12 @@ import javax.swing.WindowConstants;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
-import de.philippkatz.swing.property.types.PropertyNode;
-
 @SuppressWarnings("serial")
 public class PropertiesEditorDemo extends JFrame implements TreeModelListener {
 
 	private final PropertiesTreeTableModel treeTableModel;
 
-	private static PropertyNode createSampleData() {
+	private static Object createSampleData() {
 
 		Map<String, Object> root = new LinkedHashMap<>();
 		root.put("string", "The quick brown fox");
@@ -32,7 +30,7 @@ public class PropertiesEditorDemo extends JFrame implements TreeModelListener {
 
 		root.put("fruits", Arrays.asList("apple", "orange", "grapefruit"));
 
-		return PropertyNode.from(root);
+		return root;		
 
 	}
 
@@ -40,6 +38,22 @@ public class PropertiesEditorDemo extends JFrame implements TreeModelListener {
 		setTitle("Properties Editor Demo");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(600, 400));
+		
+		// the data types available in the editor can be configured as follows:
+		
+		// PropertiesEditorConfigBuilder configBuilder = PropertiesEditorConfig.builder();
+		//
+		// configBuilder.addType(new PropertyTypes.MapType("Object"));
+		// configBuilder.addType(new PropertyTypes.ListType("Array"));
+		//
+		// configBuilder.addDefaultType(new PropertyTypes.StringType("String", ""));
+		// configBuilder.addType(new PropertyTypes.BooleanType("Boolean", true));
+		// configBuilder.addType(new PropertyTypes.DoubleType("Double", 0.));
+		// configBuilder.addType(new PropertyTypes.LongType("Long", 0l));
+		//
+		// PropertiesEditorConfig config = configBuilder.build();
+		//
+		// treeTableModel = new PropertiesTreeTableModel(config, createSampleData());
 
 		treeTableModel = new PropertiesTreeTableModel(createSampleData());
 		treeTableModel.addTreeModelListener(this);

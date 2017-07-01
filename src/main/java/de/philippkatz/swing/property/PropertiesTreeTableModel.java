@@ -15,8 +15,41 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 
 	private static final Class<?>[] COLUMN_CLASSES = { String.class, PropertyType.class, Object.class };
 
-	public PropertiesTreeTableModel(PropertyNode root) {
-		super(root);
+	private final PropertiesEditorConfig config;
+
+	/**
+	 * Create a new PropertiesTreeTableModel.
+	 * 
+	 * @param data
+	 *            The data to show in the editor (must be a Map or List).
+	 * @throws IllegalArgumentException
+	 *             In case the data is not an instance of Map or List.
+	 */
+	public PropertiesTreeTableModel(Object data) {
+		this(PropertiesEditorConfig.defaultConfig(), data);
+	}
+
+	/**
+	 * Create a new PropertiesTreeTableModel.
+	 * 
+	 * @param config
+	 *            The custom configuration.
+	 * @param data
+	 *            The data to show in the editor (must be a Map or List).
+	 * @throws IllegalArgumentException
+	 *             In case the data is not an instance of Map or List.
+	 * @see PropertiesEditorConfig
+	 */
+	public PropertiesTreeTableModel(PropertiesEditorConfig config, Object data) {
+		super(assertCollection(config.fromObject(data)));
+		this.config = config;
+	}
+
+	private static PropertyNode assertCollection(PropertyNode propertyNode) {
+		if (!propertyNode.getType().isCollection()) {
+			throw new IllegalArgumentException("The data argument must be a Map or List.");
+		}
+		return propertyNode;
 	}
 
 	@Override
@@ -55,7 +88,7 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 
 			} else if (oldType.isCollection() && newType.isCollection()) {
 
-				// changed from array to object or vice versa; trigger update
+				// changed from list to map or vice versa; trigger update
 				// listener for all child nodes b/c the keys might have changed
 				fireChildrenChanged(currentNode);
 
@@ -90,11 +123,18 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 	@Override
 	public void insertNodeInto(MutableTreeTableNode newChild, MutableTreeTableNode parent, int index) {
 		super.insertNodeInto(newChild, parent, index);
-		
-		// make sure all children are updated; an array entry might change its
+
+		// make sure all children are updated; a list entry might change its
 		// key from [9] to [10], and we need to re-draw the table in this case
 		fireChildrenChanged(parent);
-		
+
+	}
+
+	/**
+	 * @return The editor configuration.
+	 */
+	public PropertiesEditorConfig getConfig() {
+		return config;
 	}
 
 }

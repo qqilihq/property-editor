@@ -3,6 +3,8 @@ package de.philippkatz.swing.property.types;
 import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.MutableTreeTableNode;
 
+import de.philippkatz.swing.property.types.PropertyTypes.ListType;
+
 public class PropertyNode extends AbstractMutableTreeTableNode {
 	
 	public static final class ChildCount {
@@ -18,26 +20,20 @@ public class PropertyNode extends AbstractMutableTreeTableNode {
 
 	private PropertyType<?> type;
 
-	public static PropertyNode from(Object object) {
-		return PropertyTypes.fromObject(null, object);
+	public PropertyNode(String key, PropertyType<?> type) {
+		super(type.getDefaultValue());
+		this.key = key;
+		this.type = type;
 	}
-
-	public static PropertyNode empty() {
-		return new PropertyNode(null, PropertyTypes.OBJECT, null);
-	}
-
-	public static PropertyNode string() {
-		return new PropertyNode(null, PropertyTypes.STRING, "");
-	}
-
-	PropertyNode(String key, PropertyType<?> type, Object value) {
+	
+	public PropertyNode(String key, PropertyType<?> type, Object value) {
 		super(value);
 		this.key = key;
 		this.type = type;
 	}
 
 	public String getKey() {
-		if (isInArray()) {
+		if (isInList()) {
 			return "[" + getParent().getIndex(this) + "]";
 		} else {
 			return key;
@@ -62,14 +58,14 @@ public class PropertyNode extends AbstractMutableTreeTableNode {
 	}
 
 	/**
-	 * @return <code>true</code> in case this node is contained within an array.
+	 * @return <code>true</code> in case this node is contained within a list.
 	 */
-	private boolean isInArray() {
+	private boolean isInList() {
 		if (getParent() == null) {
 			return false;
 		} else {
 			PropertyNode parentProperty = (PropertyNode) getParent();
-			return parentProperty.getType() == PropertyTypes.ARRAY;
+			return parentProperty.getType() instanceof ListType;
 		}
 	}
 
@@ -107,7 +103,7 @@ public class PropertyNode extends AbstractMutableTreeTableNode {
 	public boolean isEditable(int column) {
 		switch (column) {
 		case 0:
-			return !isInArray();
+			return !isInList();
 		case 1:
 			return true;
 		case 2:

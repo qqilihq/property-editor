@@ -28,13 +28,14 @@ import org.jdesktop.swingx.treetable.TreeTableCellEditor;
 import de.philippkatz.swing.property.types.PropertyNode;
 import de.philippkatz.swing.property.types.PropertyNode.ChildCount;
 import de.philippkatz.swing.property.types.PropertyType;
-import de.philippkatz.swing.property.types.PropertyTypes;
+import de.philippkatz.swing.property.types.PropertyTypes.ListType;
+import de.philippkatz.swing.property.types.PropertyTypes.MapType;
 
 @SuppressWarnings("serial")
 public final class PropertiesTreeTable extends JXTreeTable {
 
 	/**
-	 * Makes keys which are not editable (for entries within arrays) appear in a
+	 * Makes keys which are not editable (for entries within lists) appear in a
 	 * grey color.
 	 */
 	private final class KeyRenderer extends DefaultTreeCellRenderer {
@@ -51,7 +52,7 @@ public final class PropertiesTreeTable extends JXTreeTable {
 			TreePath path = getPathForRow(row);
 			if (path != null) {
 				PropertyNode item = (PropertyNode) path.getLastPathComponent();
-				if (((PropertyNode) item.getParent()).getType() == PropertyTypes.ARRAY) {
+				if (((PropertyNode) item.getParent()).getType() instanceof ListType) {
 					component.setForeground(Color.GRAY);
 				}
 			}
@@ -82,7 +83,7 @@ public final class PropertiesTreeTable extends JXTreeTable {
 			PropertyNode parent = (PropertyNode) item.getParent();
 			int itemIdx = parent.getIndex(item);
 
-			if (parent.getType() == PropertyTypes.OBJECT) {
+			if (parent.getType() instanceof MapType) {
 				for (int childIdx = 0; childIdx < parent.getChildCount(); childIdx++) {
 					PropertyNode child = (PropertyNode) parent.getChildAt(childIdx);
 					if (childIdx == itemIdx) {
@@ -125,14 +126,14 @@ public final class PropertiesTreeTable extends JXTreeTable {
 
 	private Class<?> editingClass;
 
-	public PropertiesTreeTable(PropertiesTreeTableModel model) {
+	public PropertiesTreeTable(PropertiesEditorConfig config, PropertiesTreeTableModel model) {
 		setEditable(true);
 		setDragEnabled(false);
 		setColumnSelectionAllowed(false);
 		setHighlighters(HighlighterFactory.createAlternateStriping());
 		setRowHeight(20);
 		setTreeTableModel(model);
-		setDefaultEditor(PropertyType.class, new ComboBoxCellEditor(new JComboBox<>(PropertyTypes.ALL)));
+		setDefaultEditor(PropertyType.class, new ComboBoxCellEditor(new JComboBox<>(config.getTypes())));
 		setDefaultRenderer(ChildCount.class, new ChildCountRenderer());
 		setTreeCellRenderer(new KeyRenderer());
 

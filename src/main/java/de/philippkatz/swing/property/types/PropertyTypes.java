@@ -9,9 +9,27 @@ import java.util.Map.Entry;
 
 import org.jdesktop.swingx.treetable.MutableTreeTableNode;
 
-public class PropertyTypes {
+import de.philippkatz.swing.property.PropertiesEditorConfig;
 
-	public static final PropertyType<List<?>> ARRAY = new CollectionProperty<List<?>>(List.class) {
+/**
+ * Predefined property types.
+ * 
+ * @see PropertyType
+ * @author Philipp Katz
+ */
+public final class PropertyTypes {
+
+	public static final class ListType extends CollectionType<List<?>> {
+		/**
+		 * Create a new ListType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 */
+		public ListType(String name) {
+			super(List.class, name);
+		}
+
 		@Override
 		public List<?> toObject(PropertyNode propertyNode) {
 			List<Object> list = new ArrayList<>();
@@ -22,16 +40,26 @@ public class PropertyTypes {
 		}
 
 		@Override
-		public PropertyNode fromObject(String key, Object object) {
+		public PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config) {
 			PropertyNode propertyNode = new PropertyNode(key, this, null);
 			for (Object item : (List<?>) object) {
-				propertyNode.add(PropertyTypes.fromObject(null, item));
+				propertyNode.add(config.fromObject(item));
 			}
 			return propertyNode;
 		}
-	};
+	}
 
-	public static final PropertyType<Map<?, ?>> OBJECT = new CollectionProperty<Map<?, ?>>(Map.class) {
+	public static final class MapType extends CollectionType<Map<?, ?>> {
+		/**
+		 * Create a new MapType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 */
+		public MapType(String name) {
+			super(Map.class, name);
+		}
+
 		@Override
 		public Map<?, ?> toObject(PropertyNode propertyNode) {
 			Map<String, Object> map = new LinkedHashMap<>();
@@ -43,30 +71,110 @@ public class PropertyTypes {
 		}
 
 		@Override
-		public PropertyNode fromObject(String key, Object object) {
+		public PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config) {
 			PropertyNode propertyType = new PropertyNode(key, this, null);
 			for (Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
-				propertyType.add(PropertyTypes.fromObject(entry.getKey().toString(), entry.getValue()));
+				propertyType.add(config.fromObject(entry.getKey().toString(), entry.getValue()));
 			}
 			return propertyType;
 		}
-	};
+	}
 
-	public static final PropertyType<String> STRING = new PrimitiveProperty<>(String.class, "");
-	public static final PropertyType<Boolean> BOOLEAN = new PrimitiveProperty<>(Boolean.class, true);
-	public static final PropertyType<Long> LONG = new PrimitiveProperty<>(Long.class, 0l);
-	public static final PropertyType<Integer> INTEGER = new PrimitiveProperty<>(Integer.class, 0);
-	public static final PropertyType<Double> DOUBLE = new PrimitiveProperty<>(Double.class, 0.0);
-	public static final PropertyType<Float> FLOAT = new PrimitiveProperty<>(Float.class, 0.0f);
+	public static final class StringType extends PrimitiveType<String> {
+		/**
+		 * Create a new StringType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 * @param defaultValue
+		 *            The default value.
+		 */
+		public StringType(String name, String defaultValue) {
+			super(String.class, name, defaultValue);
+		}
+	}
 
-	/** All known property types. */
-	public static final PropertyType<?>[] ALL = { ARRAY, OBJECT, STRING, BOOLEAN, LONG, INTEGER, DOUBLE, FLOAT };
+	public static final class BooleanType extends PrimitiveType<Boolean> {
+		/**
+		 * Create a new BooleanType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 * @param defaultValue
+		 *            The default value.
+		 */
+		public BooleanType(String name, Boolean defaultValue) {
+			super(Boolean.class, name, defaultValue);
+		}
+	}
 
-	private static abstract class AbstractProperty<TYPE> implements PropertyType<TYPE> {
+	public static final class LongType extends PrimitiveType<Long> {
+		/**
+		 * Create a new LongType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 * @param defaultValue
+		 *            The default value.
+		 */
+		public LongType(String name, Long defaultValue) {
+			super(Long.class, name, defaultValue);
+		}
+	}
+
+	public static final class IntegerType extends PrimitiveType<Integer> {
+		/**
+		 * Create a new IntegerType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 * @param defaultValue
+		 *            The default value.
+		 */
+		public IntegerType(String name, Integer defaultValue) {
+			super(Integer.class, name, defaultValue);
+		}
+	}
+
+	public static final class DoubleType extends PrimitiveType<Double> {
+		/**
+		 * Create a new DoubleType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 * @param defaultValue
+		 *            The default value.
+		 */
+		public DoubleType(String name, Double defaultValue) {
+			super(Double.class, name, defaultValue);
+		}
+	}
+
+	public static final class FloatType extends PrimitiveType<Float> {
+		/**
+		 * Create a new FloatType.
+		 * 
+		 * @param name
+		 *            The name in the UI.
+		 * @param defaultValue
+		 *            The default value.
+		 */
+		public FloatType(String name, Float defaultValue) {
+			super(Float.class, name, defaultValue);
+		}
+	}
+
+	private static abstract class AbstractType<TYPE> implements PropertyType<TYPE> {
+		protected final String name;
 		protected final Class<? super TYPE> javaType;
 
-		public AbstractProperty(Class<? super TYPE> javaType) {
+		public AbstractType(Class<? super TYPE> javaType, String name) {
 			this.javaType = javaType;
+			this.name = name;
+		}
+
+		public AbstractType(Class<? super TYPE> javaType) {
+			this(javaType, javaType.getSimpleName());
 		}
 
 		@Override
@@ -76,30 +184,39 @@ public class PropertyTypes {
 
 		@Override
 		public String toString() {
-			return javaType.getSimpleName();
+			return name;
 		}
 	}
 
-	private static abstract class CollectionProperty<TYPE> extends AbstractProperty<TYPE> {
-		protected CollectionProperty(Class<? super TYPE> javaType) {
+	private static abstract class CollectionType<TYPE> extends AbstractType<TYPE> {
+		protected CollectionType(Class<? super TYPE> javaType, String name) {
+			super(javaType, name);
+		}
+
+		protected CollectionType(Class<? super TYPE> javaType) {
 			super(javaType);
 		}
 
 		@Override
-		public boolean isCollection() {
+		public final boolean isCollection() {
 			return true;
 		}
 
 		@Override
-		public TYPE getDefaultValue() {
+		public final TYPE getDefaultValue() {
 			return null;
 		}
 	}
 
-	private static class PrimitiveProperty<TYPE> extends AbstractProperty<TYPE> {
+	private static class PrimitiveType<TYPE> extends AbstractType<TYPE> {
 		private final TYPE defaultValue;
 
-		protected PrimitiveProperty(Class<TYPE> type, TYPE defaultValue) {
+		protected PrimitiveType(Class<TYPE> type, String name, TYPE defaultValue) {
+			super(type, name);
+			this.defaultValue = defaultValue;
+		}
+
+		protected PrimitiveType(Class<TYPE> type, TYPE defaultValue) {
 			super(type);
 			this.defaultValue = defaultValue;
 		}
@@ -115,7 +232,7 @@ public class PropertyTypes {
 		}
 
 		@Override
-		public PropertyNode fromObject(String key, Object object) {
+		public PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config) {
 			return new PropertyNode(key, this, object);
 		}
 
@@ -126,13 +243,8 @@ public class PropertyTypes {
 		}
 	}
 
-	static PropertyNode fromObject(String key, Object object) {
-		for (PropertyType<?> type : ALL) {
-			if (type.getType().isAssignableFrom(object.getClass())) {
-				return type.fromObject(key, object);
-			}
-		}
-		throw new IllegalArgumentException("Unsupported type: " + object.getClass().getName());
+	private PropertyTypes() {
+		// not to be i'ted
 	}
 
 }

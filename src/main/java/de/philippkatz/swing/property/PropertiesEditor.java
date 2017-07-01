@@ -35,7 +35,7 @@ public class PropertiesEditor extends JPanel {
 		setLayout(new GridBagLayout());
 
 		this.treeTableModel = treeTableModel;
-		treeTable = new PropertiesTreeTable(treeTableModel);
+		treeTable = new PropertiesTreeTable(treeTableModel.getConfig(), treeTableModel);
 
 		treeTable.addTreeSelectionListener(e -> updateButtons());
 
@@ -95,7 +95,7 @@ public class PropertiesEditor extends JPanel {
 		addButton = new JButton("Add");
 		addButton.addActionListener(e -> {
 
-			PropertyNode newProperty = PropertyNode.string();
+			PropertyNode newProperty = new PropertyNode(null, treeTableModel.getConfig().getDefaultType());
 
 			if (treeTable.getSelectedRow() == -1) {
 

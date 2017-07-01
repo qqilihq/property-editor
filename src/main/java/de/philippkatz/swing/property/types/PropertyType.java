@@ -1,5 +1,7 @@
 package de.philippkatz.swing.property.types;
 
+import de.philippkatz.swing.property.PropertiesEditorConfig;
+
 /**
  * Property type description which can be used in the editor. This interface
  * defines the meta data of these types and conversion methods between Java
@@ -36,9 +38,11 @@ public interface PropertyType<TYPE> {
 	 *            (optional) key.
 	 * @param object
 	 *            The object.
+	 * @param config
+	 *            The configuration.
 	 * @return The property node.
 	 */
-	PropertyNode fromObject(String key, Object object);
+	PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config);
 
 	/**
 	 * Converts a PropertyNode to a Java object.
