@@ -92,6 +92,12 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 				// listener for all child nodes b/c the keys might have changed
 				fireChildrenChanged(currentNode);
 
+			} else {
+
+				// changed between primitives
+				modelSupport.fireChildChanged(new TreePath(getPathToRoot(currentNode.getParent())),
+						currentNode.getParent().getIndex(currentNode), currentNode);
+
 			}
 
 		} else {

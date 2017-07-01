@@ -102,15 +102,21 @@ public class PropertiesEditorConfig {
 	public PropertyType<?>[] getTypes() {
 		return types.toArray(new PropertyType[0]);
 	}
+	
+	public PropertyType<?> getType(Class<?> javaType) {
+		Objects.requireNonNull(javaType, "javaType was null");
+		for (PropertyType<?> type : getTypes()) {
+			if (type.getType().isAssignableFrom(javaType)) {
+				return type;
+			}
+		}
+		throw new IllegalArgumentException("Unsupported type: " + javaType.getName());
+	}
 
 	public PropertyNode fromObject(String key, Object object) {
 		Objects.requireNonNull(object, "object was null");
-		for (PropertyType<?> type : getTypes()) {
-			if (type.getType().isAssignableFrom(object.getClass())) {
-				return type.fromObject(key, object, this);
-			}
-		}
-		throw new IllegalArgumentException("Unsupported type: " + object.getClass().getName());
+		PropertyType<?> propertyType = getType(object.getClass());
+		return propertyType.fromObject(key, object, this);
 	}
 
 	public PropertyNode fromObject(Object object) {
