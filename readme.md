@@ -1,7 +1,8 @@
 Hierarchical Property List Editor
 =================================
 
-![Run status](https://api.shippable.com/projects/58f65c38d1780a07007b7145/badge?branch=master)
+[![Run Status](https://api.shippable.com/projects/58f65c38d1780a07007b7145/badge?branch=master)](https://app.shippable.com/github/qqilihq/property-editor)
+[![Coverage Badge](https://api.shippable.com/projects/58f65c38d1780a07007b7145/coverageBadge?branch=master)](https://app.shippable.com/github/qqilihq/property-editor)
 
 ![Demo](demo.gif)
 
