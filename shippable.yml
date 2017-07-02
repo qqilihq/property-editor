@@ -14,3 +14,5 @@ build:
   ci:
     - echo "$GPG_SECRET_KEY_BASE64" | base64 --decode | gpg --import -
     - mvn -V -B -s settings.xml clean deploy -P release
+    - cp -r target/surefire-reports shippable/testresults
+    - cp -r target/site/jacoco shippable/codecoverage
