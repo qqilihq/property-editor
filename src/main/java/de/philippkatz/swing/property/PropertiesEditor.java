@@ -6,12 +6,10 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.Border;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
@@ -30,8 +28,6 @@ public class PropertiesEditor extends JPanel {
 
 	public PropertiesEditor(PropertiesTreeTableModel treeTableModel) {
 
-		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-		setBorder(padding);
 		setLayout(new GridBagLayout());
 
 		this.treeTableModel = treeTableModel;

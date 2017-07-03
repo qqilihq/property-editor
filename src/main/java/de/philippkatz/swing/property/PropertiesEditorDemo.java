@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.event.TreeModelEvent;
@@ -38,6 +39,7 @@ public class PropertiesEditorDemo extends JFrame implements TreeModelListener {
 		setTitle("Properties Editor Demo");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(600, 400));
+		getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		// the data types available in the editor can be configured as follows:
 		
