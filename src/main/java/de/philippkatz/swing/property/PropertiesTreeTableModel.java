@@ -124,7 +124,7 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 
 	/**
 	 * @return The data shown in the editor; this is either a <tt>Map&lt;String,
-	 *         Object></tt>, or a <tt>List&lt;Object></tt>.
+	 *         Object&gt;</tt>, or a <tt>List&lt;Object&gt;</tt>.
 	 */
 	public Object getData() {
 		return ((PropertyNode) getRoot()).toObject();
@@ -134,8 +134,8 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 	 * Set the data shown in the editor.
 	 * 
 	 * @param data
-	 *            The data; either a <tt>Map&lt;String, Object></tt>, or a
-	 *            <tt>List&lt;Object></tt>
+	 *            The data; either a <tt>Map&lt;String, Object&gt;</tt>, or a
+	 *            <tt>List&lt;Object&gt;</tt>
 	 * @throws IllegalArgumentException
 	 *             In case the data is not an instance of Map or List.
 	 */
