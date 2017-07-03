@@ -121,11 +121,28 @@ public class PropertiesTreeTableModel extends DefaultTreeTableModel {
 
 		modelSupport.fireChildrenChanged(parentPath, indices, children);
 	}
-	
+
+	/**
+	 * @return The data shown in the editor; this is either a <tt>Map&lt;String,
+	 *         Object></tt>, or a <tt>List&lt;Object></tt>.
+	 */
 	public Object getData() {
 		return ((PropertyNode) getRoot()).toObject();
 	}
-	
+
+	/**
+	 * Set the data shown in the editor.
+	 * 
+	 * @param data
+	 *            The data; either a <tt>Map&lt;String, Object></tt>, or a
+	 *            <tt>List&lt;Object></tt>
+	 * @throws IllegalArgumentException
+	 *             In case the data is not an instance of Map or List.
+	 */
+	public void setData(Object data) {
+		setRoot(assertCollection(config.fromObject(data)));
+	}
+
 	@Override
 	public void insertNodeInto(MutableTreeTableNode newChild, MutableTreeTableNode parent, int index) {
 		super.insertNodeInto(newChild, parent, index);

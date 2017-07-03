@@ -132,5 +132,12 @@ public class PropertiesEditor extends JPanel {
 		});
 		return buttonPanel;
 	}
+	
+	/**
+	 * @return The model.
+	 */
+	public PropertiesTreeTableModel getTreeTableModel() {
+		return treeTableModel;
+	}
 
 }
