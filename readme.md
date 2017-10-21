@@ -12,7 +12,7 @@ structures based on `Map`s and `List`s and primitive types such as `Long`,
 `Double`, and `Boolean`. It is originally created for the [KNIME Selenium
 Nodes][1] but it could probably be of general interest.
 
-The editor is built on top of SwingX.
+The editor is built on top of SwingX from [SwingLabs][3].
 
 Download
 --------
@@ -23,7 +23,7 @@ Via Maven:
 <dependency>
   <groupId>de.philippkatz.swing.property</groupId>
   <artifactId>property-editor</artifactId>
-  <version>2.0-SNAPHSHOT</version>
+  <version>2.0.1</version>
 </dependency>
 ```
 
@@ -101,7 +101,7 @@ opening a new [issue][2].
 License
 -------
 
-[Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
+[GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl.txt)
 
 - - -
 
@@ -109,3 +109,4 @@ Copyright (c) 2017 Philipp Katz
 
 [1]: http://seleniumnodes.com
 [2]: https://github.com/qqilihq/property-editor/issues
+[3]: https://en.wikipedia.org/wiki/SwingLabs
