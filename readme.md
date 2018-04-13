@@ -3,6 +3,7 @@ Hierarchical Property List Editor
 
 [![Run Status](https://api.shippable.com/projects/58f65c38d1780a07007b7145/badge?branch=master)](https://app.shippable.com/github/qqilihq/property-editor)
 [![Coverage Badge](https://api.shippable.com/projects/58f65c38d1780a07007b7145/coverageBadge?branch=master)](https://app.shippable.com/github/qqilihq/property-editor)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.philippkatz.swing.property/property-editor/badge.svg)](http://mvnrepository.com/artifact/de.philippkatz.swing.property/property-editor)
 
 ![Demo](demo.gif)
 
