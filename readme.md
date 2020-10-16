@@ -1,7 +1,7 @@
 Hierarchical Property List Editor
 =================================
 
-[![Actions Status](https://github.com/qqilihq/propery-editor/workflows/CI/badge.svg)](https://github.com/qqilihq/propery-editor/actions)
+[![Actions Status](https://github.com/qqilihq/property-editor/workflows/CI/badge.svg)](https://github.com/qqilihq/property-editor/actions)
 [![codecov](https://codecov.io/gh/qqilihq/property-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/qqilihq/property-editor)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.philippkatz.swing.property/property-editor/badge.svg)](http://mvnrepository.com/artifact/de.philippkatz.swing.property/property-editor)
 
