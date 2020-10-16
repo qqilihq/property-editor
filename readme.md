@@ -1,8 +1,8 @@
 Hierarchical Property List Editor
 =================================
 
-[![Run Status](https://api.shippable.com/projects/58f65c38d1780a07007b7145/badge?branch=master)](https://app.shippable.com/github/qqilihq/property-editor)
-[![Coverage Badge](https://api.shippable.com/projects/58f65c38d1780a07007b7145/coverageBadge?branch=master)](https://app.shippable.com/github/qqilihq/property-editor)
+[![Actions Status](https://github.com/qqilihq/propery-editor/workflows/CI/badge.svg)](https://github.com/qqilihq/propery-editor/actions)
+[![codecov](https://codecov.io/gh/qqilihq/property-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/qqilihq/property-editor)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.philippkatz.swing.property/property-editor/badge.svg)](http://mvnrepository.com/artifact/de.philippkatz.swing.property/property-editor)
 
 ![Demo](demo.gif)
@@ -106,7 +106,7 @@ License
 
 - - -
 
-Copyright (c) 2017 Philipp Katz
+Copyright (c) 2017 – 2020, Philipp Katz
 
 [1]: http://seleniumnodes.com
 [2]: https://github.com/qqilihq/property-editor/issues
