@@ -106,7 +106,7 @@ License
 
 - - -
 
-Copyright (c) 2017 Philipp Katz
+Copyright (c) 2017 – 2020, Philipp Katz
 
 [1]: http://seleniumnodes.com
 [2]: https://github.com/qqilihq/property-editor/issues
