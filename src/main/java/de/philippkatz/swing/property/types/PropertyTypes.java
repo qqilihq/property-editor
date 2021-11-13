@@ -207,12 +207,12 @@ public final class PropertyTypes {
 		}
 
 		@Override
-		public Class<? super TYPE> getType() {
+		public final Class<? super TYPE> getType() {
 			return javaType;
 		}
 
 		@Override
-		public String toString() {
+		public final String toString() {
 			return name;
 		}
 	}
@@ -237,7 +237,8 @@ public final class PropertyTypes {
 		}
 	}
 
-	private static class PrimitiveType<TYPE> extends AbstractType<TYPE> {
+	/** @since 2.1 (public) */
+	public static class PrimitiveType<TYPE> extends AbstractType<TYPE> {
 		private final TYPE defaultValue;
 
 		protected PrimitiveType(Class<TYPE> type, String name, TYPE defaultValue) {
@@ -256,18 +257,18 @@ public final class PropertyTypes {
 		}
 
 		@Override
-		public TYPE getDefaultValue() {
+		public final TYPE getDefaultValue() {
 			return defaultValue;
 		}
 
 		@Override
-		public PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config) {
+		public final PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config) {
 			return new PropertyNode(key, this, object);
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public TYPE toObject(PropertyNode propertyNode) {
+		public final TYPE toObject(PropertyNode propertyNode) {
 			return (TYPE) propertyNode.getUserObject();
 		}
 	}

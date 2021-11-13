@@ -4,6 +4,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import de.philippkatz.swing.property.PropertiesEditorConfig;
+import de.philippkatz.swing.property.types.PropertyTypes.PrimitiveType;
 
 /**
  * Property type description which can be used in the editor. This interface
@@ -14,6 +15,7 @@ import de.philippkatz.swing.property.PropertiesEditorConfig;
  * @param <TYPE>
  *            The JavaType which corresponds with this property type.
  * @see PropertyTypes
+ * @see PrimitiveType
  */
 public interface PropertyType<TYPE> {
 

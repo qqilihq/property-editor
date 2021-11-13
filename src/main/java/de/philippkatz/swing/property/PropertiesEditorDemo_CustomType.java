@@ -21,9 +21,8 @@ import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 
 import de.philippkatz.swing.property.PropertiesEditorConfig.PropertiesEditorConfigBuilder;
-import de.philippkatz.swing.property.types.PropertyNode;
-import de.philippkatz.swing.property.types.PropertyType;
 import de.philippkatz.swing.property.types.PropertyTypes;
+import de.philippkatz.swing.property.types.PropertyTypes.PrimitiveType;
 
 @SuppressWarnings("serial")
 public class PropertiesEditorDemo_CustomType extends JFrame implements TreeModelListener {
@@ -92,41 +91,9 @@ public class PropertiesEditorDemo_CustomType extends JFrame implements TreeModel
 		configBuilder.addType(new PropertyTypes.BooleanType("Boolean", true));
 		configBuilder.addType(new PropertyTypes.DoubleType("Double", 0.));
 		configBuilder.addType(new PropertyTypes.LongType("Long", 0l));
-		// TODO use `PrimitiveType`
-		configBuilder.addType(new PropertyType<NamedColor>() {
-			@Override
-			public boolean isCollection() {
-				return false;
-			}
-
-			@Override
-			public NamedColor getDefaultValue() {
-				return null;
-			}
-
-			@Override
-			public Class<? super NamedColor> getType() {
-				return NamedColor.class;
-			}
-
-			@Override
-			public PropertyNode fromObject(String key, Object object, PropertiesEditorConfig config) {
-				return new PropertyNode(key, this, object);
-			}
-
-			@Override
-			public NamedColor toObject(PropertyNode propertyNode) {
-				return (NamedColor) propertyNode.getUserObject();
-			}
-
-			// XXX I had no idea that this needs to be overridden!
-
-			@Override
-			public String toString() {
-				// return getType().getSimpleName();
-				return "Color";
-			}
-
+		
+		// let's define a custom type
+		configBuilder.addType(new PrimitiveType<NamedColor>(NamedColor.class, null) {
 			@Override
 			public TableCellRenderer getRenderer() {
 				return new DefaultTableRenderer() {
@@ -136,8 +103,7 @@ public class PropertiesEditorDemo_CustomType extends JFrame implements TreeModel
 						Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 								row, column);
 						if (value instanceof NamedColor) {
-							NamedColor color = (NamedColor) value;
-							component.setForeground(color.color);
+							component.setForeground(((NamedColor) value).color);
 						}
 						return component;
 					}
@@ -155,7 +121,6 @@ public class PropertiesEditorDemo_CustomType extends JFrame implements TreeModel
 
 		treeTableModel = new PropertiesTreeTableModel(config, createSampleData());
 
-		// treeTableModel = new PropertiesTreeTableModel(createSampleData());
 		treeTableModel.addTreeModelListener(this);
 		add(new PropertiesEditor(treeTableModel));
 
