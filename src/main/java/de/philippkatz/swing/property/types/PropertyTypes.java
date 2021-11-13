@@ -7,6 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
+import org.jdesktop.swingx.JXTable.BooleanEditor;
+import org.jdesktop.swingx.JXTable.NumberEditor;
+import org.jdesktop.swingx.renderer.CheckBoxProvider;
+import org.jdesktop.swingx.renderer.DefaultTableRenderer;
+import org.jdesktop.swingx.renderer.FormatStringValue;
 import org.jdesktop.swingx.treetable.MutableTreeTableNode;
 
 import de.philippkatz.swing.property.PropertiesEditorConfig;
@@ -106,9 +117,27 @@ public final class PropertyTypes {
 		public BooleanType(String name, Boolean defaultValue) {
 			super(Boolean.class, name, defaultValue);
 		}
+
+		// make rendering and editing of checkboxes align left
+
+		@Override
+		public TableCellRenderer getRenderer() {
+			return new DefaultTableRenderer(new CheckBoxProvider(null, SwingConstants.LEFT));
+		}
+
+		@SuppressWarnings("serial")
+		@Override
+		public TableCellEditor getEditor() {
+			return new BooleanEditor() {
+				{
+					JCheckBox checkBox = (JCheckBox) getComponent();
+					checkBox.setHorizontalAlignment(SwingConstants.LEFT);
+				}
+			};
+		}
 	}
 
-	public static final class LongType extends PrimitiveType<Long> {
+	public static final class LongType extends NumberType<Long> {
 		/**
 		 * Create a new LongType.
 		 * 
@@ -122,7 +151,7 @@ public final class PropertyTypes {
 		}
 	}
 
-	public static final class IntegerType extends PrimitiveType<Integer> {
+	public static final class IntegerType extends NumberType<Integer> {
 		/**
 		 * Create a new IntegerType.
 		 * 
@@ -136,7 +165,7 @@ public final class PropertyTypes {
 		}
 	}
 
-	public static final class DoubleType extends PrimitiveType<Double> {
+	public static final class DoubleType extends NumberType<Double> {
 		/**
 		 * Create a new DoubleType.
 		 * 
@@ -150,7 +179,7 @@ public final class PropertyTypes {
 		}
 	}
 
-	public static final class FloatType extends PrimitiveType<Float> {
+	public static final class FloatType extends NumberType<Float> {
 		/**
 		 * Create a new FloatType.
 		 * 
@@ -240,6 +269,31 @@ public final class PropertyTypes {
 		@Override
 		public TYPE toObject(PropertyNode propertyNode) {
 			return (TYPE) propertyNode.getUserObject();
+		}
+	}
+
+	/** @since 2.1 */
+	private static class NumberType<NUMBER extends Number> extends PrimitiveType<NUMBER> {
+		public NumberType(Class<NUMBER> type, String name, NUMBER defaultValue) {
+			super(type, name, defaultValue);
+		}
+
+		// make rendering and editing of numbers align left
+
+		@Override
+		public TableCellRenderer getRenderer() {
+			return new DefaultTableRenderer(new FormatStringValue(), SwingConstants.LEFT);
+		}
+
+		@SuppressWarnings("serial")
+		@Override
+		public TableCellEditor getEditor() {
+			return new NumberEditor() {
+				{
+					JTextField textField = (JTextField) getComponent();
+					textField.setHorizontalAlignment(SwingConstants.LEFT);
+				}
+			};
 		}
 	}
 

@@ -3,6 +3,7 @@ package de.philippkatz.swing.property;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import de.philippkatz.swing.property.types.PropertyNode;
 import de.philippkatz.swing.property.types.PropertyType;
@@ -104,13 +105,18 @@ public class PropertiesEditorConfig {
 	}
 	
 	public PropertyType<?> getType(Class<?> javaType) {
+		return Optional.ofNullable(getTypeOrNull(javaType))
+				.orElseThrow(() -> new IllegalArgumentException("Unsupported type: " + javaType.getName()));
+	}
+
+	PropertyType<?> getTypeOrNull(Class<?> javaType) {
 		Objects.requireNonNull(javaType, "javaType was null");
 		for (PropertyType<?> type : getTypes()) {
 			if (type.getType().isAssignableFrom(javaType)) {
 				return type;
 			}
 		}
-		throw new IllegalArgumentException("Unsupported type: " + javaType.getName());
+		return null;
 	}
 
 	public PropertyNode fromObject(String key, Object object) {
