@@ -56,7 +56,7 @@ public interface PropertyType<TYPE> {
 	 */
 	TYPE toObject(PropertyNode propertyNode);
 
-	// added in v3
+	// added in v2.1
 
 	/**
 	 * Allow to customize the table cell renderer.
