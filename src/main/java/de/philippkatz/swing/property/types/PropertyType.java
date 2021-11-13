@@ -1,6 +1,10 @@
 package de.philippkatz.swing.property.types;
 
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
 import de.philippkatz.swing.property.PropertiesEditorConfig;
+import de.philippkatz.swing.property.types.PropertyTypes.PrimitiveType;
 
 /**
  * Property type description which can be used in the editor. This interface
@@ -11,6 +15,7 @@ import de.philippkatz.swing.property.PropertiesEditorConfig;
  * @param <TYPE>
  *            The JavaType which corresponds with this property type.
  * @see PropertyTypes
+ * @see PrimitiveType
  */
 public interface PropertyType<TYPE> {
 
@@ -52,4 +57,27 @@ public interface PropertyType<TYPE> {
 	 * @return The Java object.
 	 */
 	TYPE toObject(PropertyNode propertyNode);
+
+	// added in v2.1
+
+	/**
+	 * Allow to customize the table cell renderer.
+	 * 
+	 * @return The renderer, or <code>null</code> to use the default.
+	 * @since 2.1
+	 */
+	default TableCellRenderer getRenderer() {
+		return null;
+	}
+
+	/**
+	 * Allow to customize the table cell editor.
+	 * 
+	 * @return The editor, or <code>null</code> to use the default.
+	 * @since 2.1
+	 */
+	default TableCellEditor getEditor() {
+		return null;
+	}
+
 }

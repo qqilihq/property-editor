@@ -3,13 +3,10 @@ package de.philippkatz.swing.property;
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -20,9 +17,6 @@ import javax.swing.tree.TreePath;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-import org.jdesktop.swingx.renderer.CheckBoxProvider;
-import org.jdesktop.swingx.renderer.DefaultTableRenderer;
-import org.jdesktop.swingx.renderer.FormatStringValue;
 import org.jdesktop.swingx.treetable.TreeTableCellEditor;
 
 import de.philippkatz.swing.property.types.PropertyNode;
@@ -124,9 +118,12 @@ public final class PropertiesTreeTable extends JXTreeTable {
 
 	}
 
+	private final PropertiesEditorConfig config;
+
 	private Class<?> editingClass;
 
 	public PropertiesTreeTable(PropertiesEditorConfig config, PropertiesTreeTableModel model) {
+		this.config = config;
 		setEditable(true);
 		setDragEnabled(false);
 		setColumnSelectionAllowed(false);
@@ -136,23 +133,6 @@ public final class PropertiesTreeTable extends JXTreeTable {
 		setDefaultEditor(PropertyType.class, new ComboBoxCellEditor(new JComboBox<>(config.getTypes())));
 		setDefaultRenderer(ChildCount.class, new ChildCountRenderer());
 		setTreeCellRenderer(new KeyRenderer());
-
-		// make rendering and editing of checkboxes and numbers align left
-		setDefaultRenderer(Boolean.class, new DefaultTableRenderer(new CheckBoxProvider(null, SwingConstants.LEFT)));
-		setDefaultRenderer(Number.class, new DefaultTableRenderer(new FormatStringValue(), SwingConstants.LEFT));
-
-		setDefaultEditor(Boolean.class, new BooleanEditor() {
-			{
-				JCheckBox checkBox = (JCheckBox) getComponent();
-				checkBox.setHorizontalAlignment(SwingConstants.LEFT);
-			}
-		});
-		setDefaultEditor(Number.class, new NumberEditor() {
-			{
-				JTextField textField = (JTextField) getComponent();
-				textField.setHorizontalAlignment(SwingConstants.LEFT);
-			}
-		});
 	}
 
 	@Override
@@ -161,7 +141,13 @@ public final class PropertiesTreeTable extends JXTreeTable {
 		int modelColumn = convertColumnIndexToModel(column);
 		if (modelColumn == 2) {
 			editingClass = getModel().getValueAt(row, modelColumn).getClass();
-			return getDefaultRenderer(editingClass);
+			// check if we have a renderer supplied via config
+			PropertyType<?> type = config.getTypeOrNull(editingClass);
+			if (type != null && type.getRenderer() != null) {
+				return type.getRenderer();
+			} else {
+				return getDefaultRenderer(editingClass);
+			}
 		} else {
 			return super.getCellRenderer(row, column);
 		}
@@ -179,7 +165,13 @@ public final class PropertiesTreeTable extends JXTreeTable {
 			return new UniqueKeyTreeTableCellEditor(tree, row);
 		} else if (modelColumn == 2) {
 			editingClass = getModel().getValueAt(row, modelColumn).getClass();
-			return getDefaultEditor(editingClass);
+			// check if we have a renderer supplied via config
+			PropertyType<?> type = config.getTypeOrNull(editingClass);
+			if (type != null && type.getEditor() != null) {
+				return type.getEditor();
+			} else {
+				return getDefaultEditor(editingClass);
+			}
 		} else {
 			return super.getCellEditor(row, column);
 		}
